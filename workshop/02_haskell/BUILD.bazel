@@ -1,0 +1,69 @@
+# Set all target’s visibility in this package to "public".
+package(default_visibility = ["//visibility:public"])
+
+# Load rules_haskell rules.
+load(
+    "@rules_haskell//haskell:defs.bzl",
+    "haskell_toolchain_library",
+    "haskell_library",
+    "haskell_binary",
+    "haskell_test",
+)
+
+load(
+    "@rules_haskell//haskell/experimental:defs.bzl",
+    "haskell_module",
+)
+
+# You can add your own libraries with haskell_library.
+haskell_library(
+    name = "bazel-haskell-project",
+    src_strip_prefix = "src",
+    srcs = glob(['src/**/*.hs']),
+    deps = [
+        "@stackage//:base"
+    ],
+)
+
+haskell_binary(
+    name = "app",
+    srcs = ["app/Main.hs"],
+    deps = ["@stackage//:base", ":bazel-haskell-project", "@stackage//:formatting", "@stackage//:text"],
+)
+
+haskell_test(
+    name = "test",
+    srcs = ["test/Main.hs"],
+    deps = ["@stackage//:base", ":bazel-haskell-project"],
+)
+
+haskell_binary(
+    name = "module-app",
+    modules = [":Main"],
+    deps = ["@stackage//:base", ":module-bazel-haskell-project"],
+)
+
+haskell_library(
+    name = "module-bazel-haskell-project",
+    modules = [":Foo", ":Bar"],
+    deps = ["@stackage//:base"],
+)
+
+haskell_module(
+    name = "Foo",
+    src = "src/Foo.hs",
+    src_strip_prefix = "src",
+)
+
+haskell_module(
+    name = "Bar",
+    src = "src/Bar.hs",
+    src_strip_prefix = "src",
+    deps = [":Foo"],
+)
+
+haskell_module(
+    name = "Main",
+    src = "app/Main.hs",
+    src_strip_prefix = "app",
+)

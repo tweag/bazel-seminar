@@ -1,0 +1,38 @@
+load(
+    "@rules_haskell//haskell:defs.bzl",
+    "haskell_binary",
+    "haskell_library",
+    "haskell_test",
+    "haskell_toolchain_library",
+)
+
+# Define a Haskell library target.
+haskell_library(
+    name = "mylib",
+    srcs = ["MyLib.hs"],
+    # By default, Haskell targets depend on `base`, which provides `Prelude`.
+    deps = [":base"],
+)
+
+# `base` is included in the GHC distribution, it is a "toolchain library".
+haskell_toolchain_library(name = "base")
+
+# Define a Haskell executable target.
+haskell_binary(
+    name = "hello",
+    srcs = ["Hello.hs"],
+    deps = [
+        ":base",
+        ":mylib",
+    ],
+)
+
+# Define a Haskell test target.
+haskell_test(
+    name = "test",
+    size = "small",
+    srcs = ["Test.hs"],
+    deps = [
+        ":base",
+    ],
+)

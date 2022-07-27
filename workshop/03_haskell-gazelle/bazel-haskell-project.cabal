@@ -1,0 +1,28 @@
+cabal-version:      2.4
+name:               bazel-haskell-project
+version:            0.1.0.0
+
+library
+  hs-source-dirs:
+    src
+  build-depends:
+    base
+  exposed-modules:
+    Foo
+    Bar
+
+executable app
+    main-is: Main.hs
+    build-depends:
+      base,
+      bazel-haskell-project
+    hs-source-dirs: app
+    default-language: Haskell2010
+
+test-suite test
+    type: exitcode-stdio-1.0
+    main-is: Main.hs
+    hs-source-dirs: test
+    build-depends:
+      base,
+      bazel-haskell-project

@@ -1,0 +1,3 @@
+common --curses=no
+build --noshow_loading_progress --noshow_progress
+query --noshow_loading_progress --noshow_progress

@@ -1,0 +1,18 @@
+workspace(name = "simple")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "rules_haskell",
+    strip_prefix = "rules_haskell-0.14",
+    urls = ["https://github.com/tweag/rules_haskell/archive/v0.14.tar.gz"],
+    sha256 = "851e16edc7c33b977649d66f2f587071dde178a6e5bcfeca5fe9ebbe81924334",
+)
+
+load("@rules_haskell//haskell:repositories.bzl", "rules_haskell_dependencies")
+
+rules_haskell_dependencies()
+
+load("@rules_haskell//haskell:toolchain.bzl", "rules_haskell_toolchains")
+
+rules_haskell_toolchains(version = "8.10.7")
