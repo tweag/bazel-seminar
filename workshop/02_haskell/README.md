@@ -131,7 +131,8 @@ Note that if we change the version of a package we're using or add a new package
 
 
 ### Adding dependencies that are not on stackage, from a git repo, etc
-TODO: add example to 02_haskell?
+
+See [vendoring-packages](https://rules-haskell.readthedocs.io/en/latest/haskell-use-cases.html#vendoring-packages).
 
 ## Adding compiler flags in different places
 
