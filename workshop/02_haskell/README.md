@@ -132,7 +132,11 @@ Note that if we change the version of a package we're using or add a new package
 
 ### Adding dependencies that are not on stackage, from a git repo, etc
 
-See [vendoring-packages](https://rules-haskell.readthedocs.io/en/latest/haskell-use-cases.html#vendoring-packages).
+Two options:
+
+* Create a [custom stackage snapshot](https://docs.haskellstack.org/en/stable/pantry/#snapshots) together with [`local_snapshot`](https://release.api.haskell.build/haskell/cabal.html#stack_snapshot-local_snapshot)
+
+* Use [`vendored_packages`](https://rules-haskell.readthedocs.io/en/latest/haskell-use-cases.html#vendoring-packages).
 
 ## Adding compiler flags in different places
 
