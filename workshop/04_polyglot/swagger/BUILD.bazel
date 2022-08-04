@@ -1,0 +1,7 @@
+genrule(
+    name = "swagger",
+    outs = ["swagger.json"],
+    cmd = "$(execpath //haskell:swagger) $@",
+    tools = ["//haskell:swagger"],
+    visibility = ["//visibility:public"],
+)

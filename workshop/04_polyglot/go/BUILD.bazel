@@ -1,0 +1,22 @@
+load(":codegen.bzl", "go_swagger_gen")
+
+go_swagger_gen(
+    name = "server",
+    spec = "//swagger:swagger.json",
+)
+
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix polyglot.com
+# gazelle:exclude **/.ipynb_checkpoints/**
+gazelle(name = "gazelle")
+
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go/go.mod",
+        "-prune=true",
+    ],
+    command = "update-repos",
+    data = ["//go:go.mod"],
+)

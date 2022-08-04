@@ -1,0 +1,71 @@
+load(
+    "@rules_haskell//haskell:defs.bzl",
+    "haskell_binary",
+    "haskell_library",
+    "haskell_test",
+)
+
+# TODO
+# - Add a cross-language dependency.
+#   - A runtime dependency on the Go server for an integration test.
+
+haskell_library(
+    name = "api",
+    srcs = ["Api.hs"],
+    deps = [
+        "@stackage//:base",
+        "@stackage//:servant",
+        "@stackage//:text",
+    ],
+)
+
+haskell_binary(
+    name = "swagger",
+    srcs = ["Swagger.hs"],
+    visibility = ["//swagger:__pkg__"],
+    deps = [
+        ":api",
+        "@stackage//:aeson",
+        "@stackage//:aeson-pretty",
+        "@stackage//:base",
+        "@stackage//:bytestring",
+        "@stackage//:lens",
+        "@stackage//:servant-swagger",
+        "@stackage//:swagger2",
+    ],
+)
+
+haskell_binary(
+    name = "client",
+    srcs = ["Client.hs"],
+    deps = [
+        ":api",
+        "@stackage//:aeson",
+        "@stackage//:base",
+        "@stackage//:bytestring",
+        "@stackage//:http-client",
+        "@stackage//:lens",
+        "@stackage//:servant",
+        "@stackage//:servant-client",
+        "@stackage//:text",
+    ],
+)
+
+haskell_test(
+    name = "integration_test",
+    srcs = ["Test.hs"],
+    args = [
+        "$(rootpath //go/server/cmd/logging-api-server)",
+        "$(rootpath //haskell:client)",
+    ],
+    data = [
+        "//go/server/cmd/logging-api-server",
+        "//haskell:client",
+    ],
+    main_function = "Test.main",
+    deps = [
+        ":api",
+        "@stackage//:base",
+        "@stackage//:process",
+    ],
+)

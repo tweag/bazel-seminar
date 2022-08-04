@@ -1,0 +1,8 @@
+# use the same configuration for both host and target platforms
+# when we cache stackage libs in the Dockerfile they are built for a different platform
+# than the one that is used when we try to use the swagger gen as a tool (as it runs in a build)
+# hence that causes recompilation, even though we've already built them in our Dockerfile
+# we could instead define some dummy target which depends on swagger gen as a tool and run that
+# but this seems easier and works (for now)
+# see https://github.com/digital-asset/daml/blob/e023fcfc8cc9616e175b5fa85116326f38d8b62f/.bazelrc#L84
+build --distinct_host_configuration=false

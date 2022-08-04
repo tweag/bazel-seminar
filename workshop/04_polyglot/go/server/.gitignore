@@ -1,0 +1,3 @@
+# ignore any Go source files below, except for the configure_xxx.go file which is supposed to be edited
+*.go
+!/restapi/configure_*.go

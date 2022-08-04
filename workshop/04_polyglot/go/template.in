@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+@@GENERATED_MESSAGE@@
+
+set -eEuo pipefail
+
+declare -r RUNNER_LABEL=@@RUNNER_LABEL@@
+declare -r GOTOOL=@@GOTOOL@@
+declare -r SWAGGER=@@SWAGGER@@
+declare -r JSON_FILE=@@JSON_FILE@@
+
+function add_tool_path() {
+  local DIR=$(dirname "$1")
+
+  PATH="${PATH:+$PATH:}$(realpath --no-symlinks "$DIR")"
+}
+
+add_tool_path "$GOTOOL"
+add_tool_path "$SWAGGER"
+
+# Provide an empty GOPATH to not interfere with an existing one on the host.
+# Note, the path cannot be empty; otherwise the swagger tool would use "$HOME/go" as fallback.
+declare -rx GOPATH="$(mktemp -d)"
+
+trap 'rm -rf "$GOPATH"' EXIT
+
+mkdir --parents "$BUILD_WORKSPACE_DIRECTORY/$(dirname @@TARGET_DIR@@)/server"
+swagger generate server --spec "$JSON_FILE" --target "$BUILD_WORKSPACE_DIRECTORY/$(dirname @@TARGET_DIR@@)/server"

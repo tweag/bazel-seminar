@@ -1,0 +1,110 @@
+workspace(name = "polyglot")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+
+http_archive(
+    name = "rules_haskell",
+    sha256 = "aba3c16015a2363b16e2f867bdc5c792fa71c68cb97d8fe95fddc41e409d6ba8",
+    strip_prefix = "rules_haskell-0.15",
+    urls = ["https://github.com/tweag/rules_haskell/archive/v0.15.tar.gz"],
+)
+
+load("@rules_haskell//haskell:repositories.bzl", "rules_haskell_dependencies")
+
+rules_haskell_dependencies()
+
+load("@rules_haskell//haskell:toolchain.bzl", "rules_haskell_toolchains")
+
+rules_haskell_toolchains(version = "8.10.7")
+
+load("@rules_haskell//haskell:cabal.bzl", "stack_snapshot")
+
+stack_snapshot(
+    name = "stackage",
+    extra_deps = {
+        "zlib": ["@zlib.c"],
+    },
+    packages = [
+        "aeson",
+        "aeson-pretty",
+        "base",
+        "bytestring",
+        "http-client",
+        "lens",
+        "process",
+        "servant",
+        "servant-client",
+        "servant-swagger",
+        "swagger2",
+        "text",
+    ],
+    snapshot = "lts-18.28",
+    # N.B. to update run `bazel run @stackage-unpinned//:pin` (you must have the `stack` tool installed)
+    stack_snapshot_json = "//:stackage_snapshot.json",
+)
+
+http_archive(
+    name = "zlib.c",
+    build_file = "//3rdparty:zlib.BUILD",
+    sha256 = "91844808532e5ce316b3c010929493c0244f3d37593afd6de04f71821d5136d9",
+    strip_prefix = "zlib-1.2.12",
+    urls = ["https://zlib.net/zlib-1.2.12.tar.gz"],
+)
+
+# Go rules
+
+http_archive(
+    name = "io_bazel_rules_go",
+    sha256 = "f2dcd210c7095febe54b804bb1cd3a58fe8435a909db2ec04e31542631cf715c",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.31.0/rules_go-v0.31.0.zip",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.31.0/rules_go-v0.31.0.zip",
+    ],
+)
+
+http_archive(
+    name = "bazel_gazelle",
+    sha256 = "5982e5463f171da99e3bdaeff8c0f48283a7a5f396ec5282910b9e8a49c0dd7e",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.25.0/bazel-gazelle-v0.25.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.25.0/bazel-gazelle-v0.25.0.tar.gz",
+    ],
+)
+
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("//:deps.bzl", "go_dependencies")
+
+# gazelle:repository_macro deps.bzl%go_dependencies
+go_dependencies()
+
+go_rules_dependencies()
+
+go_register_toolchains(version = "1.18")
+
+gazelle_dependencies()
+
+# go-swagger tool
+
+http_file(
+    name = "go_swagger_tool",
+    downloaded_file_path = "swagger",
+    executable = True,
+    sha256 = "0666361b45e11862e3d6487693da9f498710e395660ed0fcbea835a9e8c7272d",
+    urls = ["https://github.com/go-swagger/go-swagger/releases/download/v0.29.0/swagger_linux_amd64"],
+)
+
+## Packaging
+
+http_archive(
+    name = "rules_pkg",
+    sha256 = "8a298e832762eda1830597d64fe7db58178aa84cd5926d76d5b744d6558941c2",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
+        "https://github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
+    ],
+)
+
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+
+rules_pkg_dependencies()
