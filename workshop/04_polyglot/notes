@@ -1,0 +1,42 @@
+0. swagger (server-gen directly?)
+1. update-repos
+2. gazelle
+3. tgz
+
+## Polyglot Repository
+TODO
+
+.bzl and macros
+
+Illustrates
+* Bazel provides the same build language for Go and Haskell
+* Bazel can express the code generation dependency-graph: Servant -> Swagger -> Go
+* Bazel can express cross-language runtime-dependencies: Haskell integration test <- Haskell client & Go server or similar
+
+Helps to understand
+* What's the difference between `data`, `deps`, `tools`.
+* How to access runtime dependencies
+
+## Go Extension
+
+The Go extension for Bazel is called `rules_go`.
+
+You can find it on GitHub at [`bazelbuild/rules_go`](https://github.com/bazelbuild/rules_go).
+
+## Generating Go sources
+
+The [go-swagger](https://github.com/go-swagger/go-swagger) tool can be used to generate server, client and a CLI code for Go from a Swagger specification.
+
+* Run `bazel run //go:server` to generate Go sources in `go/server/`
+* Run `bazel run //go:gazelle` to generate or update `BUILD.bazel` files
+* Run `bazel run //go:gazelle-update-repos` to generate or update `deps.bzl`
+* Run `bazel run //go/server/cmd/logging-api-server -- --port=8889`
+
+Open http://localhost:8889/api/logs to access the API.
+
+### Haskell Client
+
+With the `logging-api-server` Go server running on port 8889,
+
+* Run `bazel run //haskell:client -- add 'test, test, test'` to add messages
+* Run `bazel run //haskell:client -- get` to list messages or reload your browser at http://localhost:8889/api/logs

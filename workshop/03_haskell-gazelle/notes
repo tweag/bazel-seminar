@@ -1,0 +1,61 @@
+setup rules_haskell
+setup gazelle
+setup gazelle_cabal
+
+golang xerrors, see https://github.com/tweag/gazelle_cabal/blob/main/example/WORKSPACE#L112
+https://github.com/tweag/gazelle_cabal/issues/41
+
+amend stack_snapshot to gazelle_cabal's needs
+
+where should we get base? add it to stack_snapshot, or register as toolchain lib?
+if latter, gazelle_cabal generates @stackage//:base which we don't want, we want :base instead
+gazelle-update-repos
+
+showcase deleting a component
+
+showcase adding an external dep and using update-repos to update WORKSPACE
+
+many caveats - see the readme for gazelle_cabal
+
+
+
+gazelle_haskell_modules
+extend stack_snapshot with hspec
+add gazelle_haskell_modules deps
+
+extend gazelle_binary with language extension/add
+
+extend docker image with tinfo!!!
+
+showcase deleting a module
+
+showcase autodiscover
+
+mention cross_library_deps and narrowed_deps?
+
+many caveats - see the readme for gazelle_haskell_modules
+
+TODOs from slides
+
+## BUILD File Generation
+
+
+TODO
+
+* Introduce Gazelle
+* For Go
+* For Haskell
+
+This doesn't need to go in-depth, but should describe common workflows:
+
+* Adding a module/library dependency
+* Removing a module/library
+* Adding an exterinal dependency
+
+## Gazelle
+
+Gazelle is a build file generator for Bazel projects.
+
+It supports generating `BUILD.bazel` files from a `go.mod` file, and can also update repository rules for Go dependencies.
+
+You can find it on GitHub at [`bazelbuild/bazel-gazelle`](https://github.com/bazelbuild/bazel-gazelle).
